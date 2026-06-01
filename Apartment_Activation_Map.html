@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apartment Activation Map — 2515 Eliot St</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#1a1a1a;--smoke:#f5f3ef;--warm:#e8e4dd;--rust:#c4501a;--rust-light:#f4e6de;--navy:#1e2d4a;--navy-light:#e6eaf1;--sage:#2d6b4f;--sage-light:#e2f0e8;--muted:#6b6560;--corner:#7b5ea7;--corner-light:#f0ecf5}
+body{font-family:'DM Sans',sans-serif;background:#fff;color:var(--ink);width:1000px;margin:0 auto;padding:32px 44px 28px}
+
+.header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid var(--ink);padding-bottom:10px;margin-bottom:16px}
+.header h1{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;line-height:1.05}
+.header h1 span{color:var(--rust)}
+.header-meta{text-align:right;font-size:10px;color:var(--muted);line-height:1.5}
+.header-meta strong{color:var(--ink);font-weight:700;font-size:12px}
+
+.top-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.ts{background:var(--smoke);border-radius:6px;padding:8px 10px;text-align:center}
+.ts .v{font-family:'Playfair Display',serif;font-size:22px;font-weight:700}
+.ts .l{font-size:9px;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);margin-top:1px}
+.ts.rust{background:var(--rust-light)}.ts.rust .v{color:var(--rust)}
+.ts.navy{background:var(--navy-light)}.ts.navy .v{color:var(--navy)}
+.ts.sage{background:var(--sage-light)}.ts.sage .v{color:var(--sage)}
+.ts.corner{background:var(--corner-light)}.ts.corner .v{color:var(--corner)}
+
+.main{display:grid;grid-template-columns:320px 1fr;gap:16px}
+
+.map-panel{position:relative;background:var(--smoke);border-radius:8px;padding:12px;height:100%}
+.map-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);margin-bottom:8px;text-align:center}
+.ring-diagram{position:relative;width:296px;height:296px;margin:0 auto}
+.ring{position:absolute;border:1.5px dashed #ccc;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.ring-label{position:absolute;font-size:8px;color:#aaa;font-weight:500;letter-spacing:0.3px}
+.clinic-dot{position:absolute;width:14px;height:14px;background:var(--rust);border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 2px var(--rust);z-index:10}
+.bldg-dot{position:absolute;width:8px;height:8px;border-radius:50%;z-index:5;border:1.5px solid #fff}
+.bldg-dot.corner{background:var(--corner)}
+.bldg-dot.large{background:var(--rust)}
+.bldg-dot.mid{background:var(--navy)}
+.bldg-dot.small{background:#999}
+.bldg-label{position:absolute;font-size:7px;color:var(--muted);white-space:nowrap;line-height:1.1}
+.bldg-label strong{color:var(--ink);font-weight:700}
+
+.map-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:9px;color:var(--muted);justify-content:center}
+.map-legend span{display:flex;align-items:center;gap:3px}
+.leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+.table-panel{}
+.section-label{font-size:9px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--rust);margin-bottom:4px}
+.tier-label{font-size:9px;font-weight:700;color:#fff;background:var(--ink);display:inline-block;padding:2px 8px;border-radius:3px;margin:8px 0 4px;letter-spacing:0.5px}
+.tier-label:first-of-type{margin-top:0}
+.tier-label.t2{background:var(--navy)}
+.tier-label.t3{background:#888}
+
+table{width:100%;border-collapse:collapse;font-size:9px}
+th{text-align:left;font-weight:700;font-size:8px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);padding:3px 4px;border-bottom:1.5px solid var(--warm)}
+td{padding:3px 4px;border-bottom:0.5px solid #f0ece6;vertical-align:top}
+.units{font-weight:700;font-family:'Playfair Display',serif;font-size:11px}
+.units.rust{color:var(--rust)}
+.corner-tag{background:var(--corner-light);color:var(--corner);font-size:7px;font-weight:700;padding:1px 4px;border-radius:2px;text-transform:uppercase;letter-spacing:0.3px;white-space:nowrap}
+.dist{color:var(--muted)}
+.walk{font-size:8px;color:#aaa}
+.name{font-weight:700}
+.mgmt{font-size:8px;color:var(--muted)}
+.note{font-size:8px;color:var(--muted);max-width:180px}
+
+.footer{display:flex;justify-content:space-between;align-items:center;border-top:2px solid var(--ink);padding-top:6px;margin-top:12px;font-size:8px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Apartment <span>Activation Map</span></h1>
+    <div style="font-size:11px;color:var(--muted);margin-top:2px">16 complexes within ½ mile of 2515 Eliot St, Denver 80211</div>
+  </div>
+  <div class="header-meta">
+    <strong>KaufCare Clinic</strong><br>
+    2515 Eliot St, Denver, CO 80211<br>
+    LoHi / Jefferson Park
+  </div>
+</div>
+
+<div class="top-stats">
+  <div class="ts rust"><div class="v">~1,876</div><div class="l">Total doors</div></div>
+  <div class="ts navy"><div class="v">1,711</div><div class="l">Confirmed units</div></div>
+  <div class="ts corner"><div class="v">165</div><div class="l">Cornerstone doors</div></div>
+  <div class="ts sage"><div class="v">~3,375</div><div class="l">Est. residents</div></div>
+  <div class="ts"><div class="v">7</div><div class="l">Mgmt companies</div></div>
+</div>
+
+<div class="main">
+  <!-- LEFT: Schematic map -->
+  <div class="map-panel">
+    <div class="map-title">Proximity to clinic (walking distance)</div>
+    <div class="ring-diagram">
+      <!-- Distance rings -->
+      <div class="ring" style="width:296px;height:296px;top:0;left:0"></div>
+      <div class="ring" style="width:200px;height:200px;top:48px;left:48px"></div>
+      <div class="ring" style="width:100px;height:100px;top:98px;left:98px"></div>
+
+      <div class="ring-label" style="top:0;right:0">½ mi / 10–17 min</div>
+      <div class="ring-label" style="top:50px;right:52px">¼ mi / 5–8 min</div>
+      <div class="ring-label" style="top:95px;right:102px">⅛ mi</div>
+
+      <!-- Clinic center -->
+      <div class="clinic-dot" style="top:141px;left:141px"></div>
+      <div style="position:absolute;top:157px;left:118px;font-size:8px;font-weight:700;color:var(--rust);text-align:center;z-index:11">CLINIC</div>
+
+      <!-- Inner ring buildings (< ¼ mi) -->
+      <div class="bldg-dot corner" style="top:128px;left:143px" title="2525 Eliot"></div>
+      <div class="bldg-label" style="top:121px;left:153px"><strong>2525 Eliot</strong><br>~40 · 1 min</div>
+
+      <div class="bldg-dot corner" style="top:140px;left:162px" title="2800 W 26th"></div>
+      <div class="bldg-label" style="top:133px;left:172px"><strong>2800 W 26th</strong><br>~30 · 3 min</div>
+
+      <div class="bldg-dot small" style="top:153px;left:143px" title="The Roost"></div>
+      <div class="bldg-label" style="top:153px;left:112px;text-align:right"><strong>Roost</strong><br>~50 · 3 min</div>
+
+      <div class="bldg-dot corner" style="top:145px;left:170px" title="JP 33"></div>
+
+      <div class="bldg-dot small" style="top:140px;left:178px" title="Edge25"></div>
+      <div class="bldg-label" style="top:147px;left:172px"><strong>Edge25</strong> ~60<br><strong>JP 33</strong> ~35 · 4 min</div>
+
+      <div class="bldg-dot corner" style="top:118px;left:128px" title="The Pines"></div>
+      <div class="bldg-label" style="top:108px;left:95px;text-align:right"><strong>Pines</strong><br>~30 · 5 min</div>
+
+      <!-- Mid ring (¼ to ⅜ mi) -->
+      <div class="bldg-dot mid" style="top:108px;left:163px" title="Decatur Point"></div>
+      <div class="bldg-label" style="top:99px;left:172px"><strong>Decatur Pt</strong><br>203 · 6 min</div>
+
+      <div class="bldg-dot mid" style="top:95px;left:140px" title="Alton JP"></div>
+      <div class="bldg-label" style="top:86px;left:100px;text-align:right"><strong>Alton JP</strong><br>122 · 7 min</div>
+
+      <div class="bldg-dot small" style="top:102px;left:158px" title="Jeff Park Flats"></div>
+
+      <div class="bldg-dot large" style="top:130px;left:195px" title="Skyline"></div>
+      <div class="bldg-label" style="top:119px;left:205px"><strong>Skyline</strong><br>533 · 8 min</div>
+
+      <!-- Outer ring (⅜ to ½ mi) -->
+      <div class="bldg-dot large" style="top:150px;left:218px" title="Alcott"></div>
+      <div class="bldg-label" style="top:143px;left:228px"><strong>Alcott</strong><br>248 · 9 min</div>
+
+      <div class="bldg-dot large" style="top:118px;left:215px" title="2785 Speer"></div>
+      <div class="bldg-label" style="top:109px;left:225px"><strong>2785 Speer</strong><br>332 · 10 min</div>
+
+      <div class="bldg-dot corner" style="top:60px;left:143px" title="Eliot Flats"></div>
+      <div class="bldg-label" style="top:51px;left:153px"><strong>Eliot Flats</strong><br>~30 · 12 min</div>
+
+      <div class="bldg-dot mid" style="top:100px;left:230px" title="Wrenmoor"></div>
+      <div class="bldg-label" style="top:91px;left:240px"><strong>Wrenmoor</strong><br>~120 · 14 min</div>
+
+      <div class="bldg-dot large" style="top:110px;left:245px" title="Infinity"></div>
+      <div class="bldg-label" style="top:118px;left:240px"><strong>Infinity</strong><br>273 · 14 min</div>
+
+      <div class="bldg-dot mid" style="top:75px;left:220px" title="LoHi Gold"></div>
+      <div class="bldg-label" style="top:66px;left:230px"><strong>LoHi Gold</strong><br>~100 · 17 min</div>
+    </div>
+
+    <div class="map-legend">
+      <span><span class="leg-dot" style="background:var(--rust)"></span>Large (200+ units)</span>
+      <span><span class="leg-dot" style="background:var(--navy)"></span>Mid (100–200)</span>
+      <span><span class="leg-dot" style="background:var(--corner)"></span>Cornerstone</span>
+      <span><span class="leg-dot" style="background:#999"></span>Other small</span>
+      <span><span class="leg-dot" style="background:var(--rust);border:2px solid #fff;box-shadow:0 0 0 1.5px var(--rust);width:9px;height:9px"></span>Clinic</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: Building listings -->
+  <div class="table-panel">
+    <div class="section-label">Complete building inventory by distance</div>
+
+    <div class="tier-label">Inner ring — under ¼ mile (1–5 min walk) · 9 buildings · ~380 units</div>
+    <table>
+      <tr><th style="width:22%">Complex</th><th style="width:8%">Units</th><th style="width:12%">Dist</th><th style="width:18%">Mgmt</th><th style="width:10%">Phone</th><th>Note</th></tr>
+      <tr><td class="name">2525 Eliot St <span class="corner-tag">CS</span></td><td class="units">~40</td><td class="dist">0.03 mi <span class="walk">1 min</span></td><td class="mgmt">Cornerstone</td><td class="mgmt">(720) 971-9559</td><td class="note">Next door. Start here.</td></tr>
+      <tr><td class="name">2800 W 26th <span class="corner-tag">CS</span></td><td class="units">~30</td><td class="dist">0.12 mi <span class="walk">3 min</span></td><td class="mgmt">Cornerstone</td><td class="mgmt">(720) 735-5551</td><td class="note">1 block east</td></tr>
+      <tr><td class="name">The Roost</td><td class="units">~50</td><td class="dist">0.12 mi <span class="walk">3 min</span></td><td class="mgmt">Independent</td><td class="mgmt">(720) 983-1530</td><td class="note">Federal Blvd south. New mgmt.</td></tr>
+      <tr><td class="name">Jefferson Park 33 <span class="corner-tag">CS</span></td><td class="units">~35</td><td class="dist">0.17 mi <span class="walk">4 min</span></td><td class="mgmt">Cornerstone</td><td class="mgmt">(720) 776-2432</td><td class="note">25th Ave corridor</td></tr>
+      <tr><td class="name">Edge25</td><td class="units">~60</td><td class="dist">0.23 mi <span class="walk">5 min</span></td><td class="mgmt">Zellis Residential</td><td class="mgmt">(888) 366-5832</td><td class="note">New building, no reviews yet</td></tr>
+      <tr><td class="name">The Pines <span class="corner-tag">CS</span></td><td class="units">~30</td><td class="dist">0.24 mi <span class="walk">5 min</span></td><td class="mgmt">Cornerstone</td><td class="mgmt">(720) 639-8071</td><td class="note">Federal Blvd north</td></tr>
+      <tr><td class="name">Decatur Point</td><td class="units rust">203</td><td class="dist">0.29 mi <span class="walk">6 min</span></td><td class="mgmt">Iron River Mgmt</td><td class="mgmt">(720) 381-3665</td><td class="note">Strong community. Mgr Greg.</td></tr>
+      <tr><td class="name">Alton Jefferson Park</td><td class="units rust">122</td><td class="dist">0.32 mi <span class="walk">7 min</span></td><td class="mgmt">Avenue5</td><td class="mgmt">(844) 329-2811</td><td class="note">Hosts events. Co-sponsor target.</td></tr>
+      <tr><td class="name">Jeff Park Flats</td><td class="units">~25</td><td class="dist">0.38 mi <span class="walk">8 min</span></td><td class="mgmt">Condo/HOA</td><td class="mgmt">—</td><td class="note">Small condo community</td></tr>
+    </table>
+
+    <div class="tier-label t2">Outer ring — ¼ to ½ mile (8–17 min walk) · 7 buildings · ~1,496 units</div>
+    <table>
+      <tr><th style="width:22%">Complex</th><th style="width:8%">Units</th><th style="width:12%">Dist</th><th style="width:18%">Mgmt</th><th style="width:10%">Phone</th><th>Note</th></tr>
+      <tr><td class="name">Skyline at Highlands</td><td class="units rust">533</td><td class="dist">0.39 mi <span class="walk">8 min</span></td><td class="mgmt">Grand Peaks</td><td class="mgmt">(303) 351-9180</td><td class="note">LARGEST in zone. Mgr Megan. Events.</td></tr>
+      <tr><td class="name">The Alcott</td><td class="units rust">248</td><td class="dist">0.46 mi <span class="walk">9 min</span></td><td class="mgmt">Independent</td><td class="mgmt">(720) 441-2360</td><td class="note">16 stories. Community events.</td></tr>
+      <tr><td class="name">2785 Speer</td><td class="units rust">332</td><td class="dist">0.51 mi <span class="walk">10 min</span></td><td class="mgmt">Greystar</td><td class="mgmt">(970) 592-8535</td><td class="note">3.0★ — frustrated residents.</td></tr>
+      <tr><td class="name">Eliot Flats <span class="corner-tag">CS</span></td><td class="units">~30</td><td class="dist">0.60 mi <span class="walk">12 min</span></td><td class="mgmt">Cornerstone</td><td class="mgmt">(720) 419-1299</td><td class="note">Same street as clinic, north.</td></tr>
+      <tr><td class="name">Wrenmoor LoHi</td><td class="units rust">~120</td><td class="dist">0.69 mi <span class="walk">14 min</span></td><td class="mgmt">NexMetro</td><td class="mgmt">(844) 636-0256</td><td class="note">Recently renovated. Boutique.</td></tr>
+      <tr><td class="name">Infinity LoHi</td><td class="units rust">273</td><td class="dist">0.71 mi <span class="walk">14 min</span></td><td class="mgmt">BlackRock Realty</td><td class="mgmt">(720) 242-0868</td><td class="note">2nd largest. Agent Shalayna.</td></tr>
+      <tr><td class="name">LoHi Gold</td><td class="units">~100</td><td class="dist">0.83 mi <span class="walk">17 min</span></td><td class="mgmt">Independent</td><td class="mgmt">(983) 204-2089</td><td class="note">Edge of radius. Dog-friendly.</td></tr>
+    </table>
+
+    <div style="margin-top:12px;padding:8px 10px;background:var(--corner-light);border-radius:6px;border-left:3px solid var(--corner)">
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--corner)">Cornerstone Apartments — one relationship, five buildings</div>
+      <div style="font-size:9px;color:var(--muted);margin-top:2px;line-height:1.5">2525 Eliot · Jefferson Park 33 · The Pines · 2800 W 26th · Eliot Flats — all share centralized management (cornerstoneapartments.com). Uniform office hours M-F 8:30a–5p, Sat 9a–4p. Highest efficiency activation: ~165 doors from a single meeting.</div>
+    </div>
+
+    <div style="margin-top:8px;padding:8px 10px;background:var(--rust-light);border-radius:6px;border-left:3px solid var(--rust)">
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--rust)">Big four — 72% of all confirmed doors</div>
+      <div style="font-size:9px;color:var(--muted);margin-top:2px;line-height:1.5">Skyline (533) + 2785 Speer (332) + Infinity (273) + Alcott (248) = 1,386 units. Corporate-managed. Approach via event co-sponsorship first, then pamphlet placement follows.</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div>Prepared for KaufCare &bull; Apartment Activation Planning &bull; June 2026</div>
+  <div><span class="corner-tag" style="font-size:7px">CS</span> = Cornerstone Apartments &nbsp;|&nbsp; Walking distances calculated from 2515 Eliot St &nbsp;|&nbsp; Unit counts confirmed via Apartment Finder, Zillow, or estimated from building data</div>
+</div>
+
+</body>
+</html>
